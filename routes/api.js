@@ -25,9 +25,9 @@ module.exports = function (app) {
 		})
 		.delete(async function (req, res) {
 			const db = (await clidb()).collection('boards');
-			const data = await db.findOne({ _id: new ObjectId(req.body.thread_id) });
-			if (data.delete_password == req.body.delete_password) {
-				// await db.deleteOne({ _id: new ObjectId(req.body.thread_id) });
+			const data = await db.find({ _id: new ObjectId(req.body.thread_id) }).toArray();
+			if (data[0].delete_password == req.body.delete_password) {
+				await db.deleteOne({ _id: new ObjectId(req.body.thread_id) });
 				res.send('success');
 			} else {
 				res.send('incorrect password');
